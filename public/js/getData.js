@@ -39,6 +39,22 @@ $(function(){
             }
         });
     });
+    let addConName;
+    let delConName;
+    $('#delCon').on('click', function(){
+        delConName = $('#delConN').text();
+        $.get("/api/container/delete?name="+account+"&container="+delConName, function(data, status){
+            updateContainer();
+        });
+    });
+
+    $('#addCon').on('click', function(){
+        addConName = $('#addConN').text();
+        $.get("/api/container/create?name="+account+"&container="+addConName, function(data, status){
+            updateContainer();
+        });
+
+    });
 
 
     let object;
@@ -50,4 +66,23 @@ $(function(){
         });
     });*/
                 
-})       
+
+function updateContainer(){
+
+        $.get("/api/container?name="+account, function(data, status){
+            console.log(data);
+            containerRes = data.split("\n");
+            $('#containers').children().remove();
+            $('#objects').children().remove();
+            for(let i = 0; i < containerRes.length - 1; i++){
+                //$('#bontainers').append("<input type='radio' id='" + containerRes[i] + "' value='" + containerRes[i] +  "'/>");
+                
+                $('#containers').append('<label class="radio-label" id="' + containerRes[i] + '"></label>');
+                $("#containers label:nth-child(" + (i+1) + ")" ).append("<input name='containerName' type='radio' id='" + containerRes[i] + "' value='" + containerRes[i] +  "'/>");
+                $("#containers label:nth-child(" + (i+1) + ")" ).append("<span class='inner-label'>" + containerRes[i] + "&nbsp&nbsp&nbsp&nbsp&nbsp</span>");
+            }
+        });
+
+}
+
+});

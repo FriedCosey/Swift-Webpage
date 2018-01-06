@@ -9,8 +9,8 @@ app.listen(3000);
 
 app.use('/', express.static('public'));
 app.get('/api/container', getToken, getContainer);
-app.get('/api/container/create', getToken, getContainer);
-app.get('/api/container/delete', getToken, getContainer);
+app.get('/api/container/create', getToken, addContainer);
+app.get('/api/container/delete', getToken, delContainer);
 app.get('/api/object', getToken, getObject);
 app.get('/api/object/download', getToken, downloadObject);
 //app.get('/api/get', getToken,getIps);
@@ -90,6 +90,34 @@ function getObject(req, res){
     });
 }
 
+function delContainer(req, res){
+    console.log(req.query.container);
+     request({
+        uri: "http://" + url + ":8080/v1/" + res.locals.account + "/" + req.query.container,
+        method: 'DELETE',
+        headers: {
+            'X-Auth-Token' : JSON.stringify(res.locals.token),
+        },
+        },function(err, httpRes, body){
+        console.log(body);
+        res.send(body);    
+    });
+}
+function addContainer(req, res){
+    console.log(req.query.container);
+     request({
+        uri: "http://" + url + ":8080/v1/" + res.locals.account + "/" + req.query.container,
+        method: 'PUT',
+        headers: {
+            'Content-Length': 0,
+            "X-Container-Read": ".r:*",
+            'X-Auth-Token' : JSON.stringify(res.locals.token),
+        },
+        },function(err, httpRes, body){
+        console.log(body);
+        res.send(body);    
+    });
+}
 function getContainer(req, res){
 
      request({
