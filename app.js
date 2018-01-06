@@ -3,12 +3,14 @@ const express = require('express');
 const app = express();
 var fs = require('fs');
 const request = require('request');
-var url = "192.168.2.101"
+var url = "192.168.2.100"
 
 app.listen(3000);
 
 app.use('/', express.static('public'));
 app.get('/api/container', getToken, getContainer);
+app.get('/api/container/create', getToken, getContainer);
+app.get('/api/container/delete', getToken, getContainer);
 app.get('/api/object', getToken, getObject);
 app.get('/api/object/download', getToken, downloadObject);
 //app.get('/api/get', getToken,getIps);

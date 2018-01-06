@@ -7,13 +7,14 @@
 html, body{
     background-color: #1b254a;
     margin:0%;
+    font-family:Courier, monospace;
     padding:0%;
     height:100%;
     width:100%;
-      text-align: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
 }
 
@@ -172,6 +173,21 @@ html, body{
   top: 1px;
 }
 
+.go:click {
+  border: 1px solid rgba(0, 0, 0, 0.4);
+  background-color: rgba(255, 255, 255, 0.5);
+  color: white;
+}
+.go:hover {
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  background-color: rgba(255, 255, 255, 1);
+  color: white;
+}
+.go {
+  margin: 1%;
+  color: white;
+  display: inline-block;
+}
 .objs:click {
   border: 1px solid rgba(0, 0, 0, 0.4);
   background-color: rgba(255, 255, 255, 0.5);
@@ -183,7 +199,7 @@ html, body{
   color: white;
 }
 .objs {
-  border: 1px solid rgba(255, 255, 255, 0.4);
+  margin: 1%;
   color: white;
 }
 
@@ -200,4 +216,44 @@ html, body{
 
 #uploadPage a:hover{
     color:#b7adad;
+}
+
+.textbox {
+  position: relative;
+  width: 40%;
+  color: #fff;
+  line-height: 3rem;
+  border-radius: 1rem;
+  font-size: 1.5rem;
+  font-weight: 100;
+  overflow: hidden;
+}
+.textbox::after {
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #666;
+  content: '';
+  display: block;  
+}
+.textbox span {
+  position: relative;
+  display: inline-flex;
+  white-space: nowrap;
+}
+.textbox span::before {
+  content: '> \b'
+}
+.textbox span::after {
+  position: absolute;
+  bottom: -2px;
+  height: 2px;
+  background: goldenrod;
+  left: 0;
+  right: 0;
+  content: '';
+  display: block;
+}
+.textbox span:focus {
+  outline: none;
 }
