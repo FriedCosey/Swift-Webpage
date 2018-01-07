@@ -7,7 +7,8 @@
 html, body{
     background-color: #1b254a;
     margin:0%;
-    font-family:Courier, monospace;
+    /*font-family:Courier, monospace;*/
+    font-family: 'PT Serif', serif;
     padding:0%;
     height:100%;
     width:100%;

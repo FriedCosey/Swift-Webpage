@@ -3,7 +3,8 @@ const express = require('express');
 const app = express();
 var fs = require('fs');
 const request = require('request');
-var url = "192.168.2.100"
+var url = "192.168.2.107"
+var multer  = require('multer');
 
 app.listen(3000);
 
@@ -11,64 +12,10 @@ app.use('/', express.static('public'));
 app.get('/api/container', getToken, getContainer);
 app.get('/api/container/create', getToken, addContainer);
 app.get('/api/container/delete', getToken, delContainer);
+app.get('/api/object/delete', getToken, delObject);
+app.post('/api/object/create', getToken, addObject);
 app.get('/api/object', getToken, getObject);
 app.get('/api/object/download', getToken, downloadObject);
-//app.get('/api/get', getToken,getIps);
-//app.get('/api/create', getToken, getImage, getFlavor, postServer, getServerDetail);
-//app.get('/', getToken, getStorageInfo, createStorageAccount);
-function getNetworks(req,res){
-    console.log(res.locals.serverId);
-    request({
-        uri: "http://" + url + "//" ,
-        method: 'GET',
-        headers: {
-            'X-Auth-Token' : JSON.stringify(res.locals.token),
-        }}, function(err, httpRes, body){
-            console.log(body);
-    });
-
-}
-
-function getIps(req,res, next){
-    //console.log(res.locals.serverId);
-    request({
-        uri: "http://" + url + "/compute/v2.1/servers/" + app.locals.serverId + "/ips" ,
-        method: 'GET',
-        headers: {
-            'X-Auth-Token' : JSON.stringify(res.locals.token),
-        }}, function(err, httpRes, body){
-            //console.log(res.locals.serverName);
-            console.log(body);
-            JSON.parse(body);
-            res.json((body));
-            //next();
-    });
-
-}
-
-function getServerDetail(req,res){
-
-    request({
-        uri: "http://" + url + "/compute/v2.1/servers/detail",
-        method: 'GET',
-        headers: {
-            'X-Auth-Token' : JSON.stringify(res.locals.token),
-        }}, function(err, httpRes, body){
-        let servers = JSON.parse(body).servers;
-        for(let i = 0; i < servers.length; i++){
-            if(servers[i].name === res.locals.serverName){
-                res.locals.serverId = servers[i].id;
-                app.locals.serverId = servers[i].id;
-                app.locals.serverName = res.locals.serverName;
-                console.log(res.locals.serverId);
-                break;
-            }
-        }
-        let sendThis = {'name': app.locals.serverName, 'id': app.locals.serverId};
-        res.json(sendThis);
-    });
-
-}
 
 function downloadObject(req, res){
  
@@ -90,6 +37,20 @@ function getObject(req, res){
     });
 }
 
+function delObject(req, res){
+    console.log(req.query.object);
+    console.log(req.query.container);
+     request({
+        uri: "http://" + url + ":8080/v1/" + res.locals.account + "/" + req.query.container + "/" + req.query.object,
+        method: 'DELETE',
+        headers: {
+            'X-Auth-Token' : JSON.stringify(res.locals.token),
+        },
+        },function(err, httpRes, body){
+        console.log(body);
+        res.send(body);    
+    });
+}
 function delContainer(req, res){
     console.log(req.query.container);
      request({
@@ -103,6 +64,27 @@ function delContainer(req, res){
         res.send(body);    
     });
 }
+
+function addObject(req, res){
+    if(req.query.effect === "preview");
+    else if(req.query.effect === "flip");
+    else if(req.query.effect === "grey");
+    else if(req.query.effect === "rotate");
+    else
+        req.query.effect = '';
+     request({
+        uri: "http://" + url + ":8080/v1/" + res.locals.account + "/" + req.query.container + "/" + req.query.object,
+        method: 'PUT',
+        headers: {
+            'X-Auth-Token' : JSON.stringify(res.locals.token),
+            'effect' : req.query.effect,
+        },
+        },function(err, httpRes, body){
+        console.log(body);
+        res.send(body);    
+    });
+}
+
 function addContainer(req, res){
     console.log(req.query.container);
      request({
@@ -132,20 +114,6 @@ function getContainer(req, res){
     });
 }
 
-function getStorageInfo(req, res, next){
-
-     var eq =request({
-        uri: "http://" + url + ":8080/v1/AUTH_ec5d88475d4a4351a193cefb78f66220/gaga/baba.txt",
-        method: 'PUT',
-        headers: {
-            'X-Auth-Token' : JSON.stringify(res.locals.token),
-        },
-        },function(err, httpRes, body){
-           console.log(body);
-            next();
-    });
-
-}
 
 function getToken(req, res, next){
     

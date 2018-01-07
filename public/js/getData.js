@@ -1,5 +1,5 @@
 $(function(){
-    let url = "http://192.168.2.100:8080/";
+    let url = "http://192.168.2.107:8080/";
     let account;
     let containerDom = $('#containers > span');
     let containerRes;
@@ -41,6 +41,8 @@ $(function(){
     });
     let addConName;
     let delConName;
+    let delObjName;
+
     $('#delCon').on('click', function(){
         delConName = $('#delConN').text();
         $.get("/api/container/delete?name="+account+"&container="+delConName, function(data, status){
@@ -48,6 +50,14 @@ $(function(){
         });
     });
 
+    $('#delObj').on('click', function(){
+        delObjName = $('#delObjN').text();
+        $.get("/api/object/delete?name="+account+"&container="+container+"&object="+delObjName, function(data, status){
+            updateObject();
+        });
+
+    });
+    let addObjName;
     $('#addCon').on('click', function(){
         addConName = $('#addConN').text();
         $.get("/api/container/create?name="+account+"&container="+addConName, function(data, status){
@@ -55,8 +65,18 @@ $(function(){
         });
 
     });
+    let uploadON;
+    let uploadOE;
+    $('#uploadS').on('click', function(e){
+        uploadON = $('#uploadN').text();
+        uploadOE = $('#uploadE').text();
+        $('#uploadF').attr('action', "/api/object/create?name="+account+"&container="+container+"&object="+uploadON+"&effect="+uploadOE);
+    });    
 
-
+    $('#refresh').on('click', function(){
+        updateObject();
+        updateContainer();
+    });
     let object;
 
     /*$('#objects').on('change', 'input[name=objectName]:radio', function() {
@@ -65,7 +85,6 @@ $(function(){
 
         });
     });*/
-                
 
 function updateContainer(){
 
@@ -84,5 +103,21 @@ function updateContainer(){
         });
 
 }
-
+function updateObject(){
+        $.get("/api/object?name="+account+"&container="+container, function(data, status){
+            console.log(data);
+            objectRes = data.split("\n");
+            $('#objects').children().remove();
+            for(let i = 0; i < objectRes.length - 1; i++){
+                /*$('#objects').append($('<input />', {
+                    'type': 'radio',
+                    'name': 'objectName',
+                    'id':   i,
+                    'value': objectRes[i],
+                }));*/
+                //$('#objects').append('<label for="' + i + '">' + " " + objectRes[i] + " " + '</label><br>');
+                $('#objects').append("<a class='objs' target='_blank' href=" + url + "v1/" + account + "/" + container + "/" + objectRes[i] + ">" + objectRes[i] + "</a>");
+            }
+        });
+}
 });

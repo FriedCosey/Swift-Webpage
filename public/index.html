@@ -5,6 +5,9 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
   <link href="https://fonts.googleapis.com/css?family=Give+You+Glory" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Permanent+Marker" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Bellefair" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=PT+Serif" rel="stylesheet">
+
 
   <!-- Latest compiled and minified CSS -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -15,13 +18,39 @@
   <script src="js/getData.js" type="text/javascript"></script>
   <link rel="stylesheet" href="css/style.css">
 
+
   <!-- Latest compiled JavaScript -->
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <style type="text/css">
-    h1 { font-family: "Give You Glory"; font-weight: bold}
+    h1 { font-family: "Give You Glory"; font-weight: bold; font-size: 2vw}
     h2 { font-family: "Permanent Marker"; font-weight: bold}
     h3 { text-decoration: underline;  font-family: "Permanent Marker"; font-weight: bold}
     h4 { font-family: "Permanent Marker";}
+    input[type="file"] {
+    display: none;
+    }
+    .fileContainer{
+    border: 1px solid #ccc;
+    color: white;
+    display: inline-block;
+    padding: 6px 12px;
+    cursor: pointer;
+    }
+    #refresh{
+        background-color: rgba(255,255,255,0);
+    }
+    #uploadBut{
+        background-color: rgba(255,255,255,0);
+    }
+    #uploadS{
+        background-color: rgba(255,255,255,0);
+    }
+    #uploadU{
+        display: inline;
+    }
+    #uploadF{
+        display: inline;
+    }
     #container{
     padding: 2%;
     width:80%;
@@ -34,6 +63,9 @@
     .leftBlock {
     padding-left: 40px;
     text-indent: -35px;
+    }
+    #uploadN{
+        margin-right: 5%;
     }
     .leftBlock input {
     width: 20px;
@@ -73,11 +105,26 @@
       <div id="objects">
       </div>
       <h4>Upload Object </h4>
+      <div id"uploadT" class="textbox">
+         <span id="uploadN" contenteditable>Name</span> 
+         <span id="uploadE" contenteditable>Effect</span> 
+      </div>
+      <form target="dummyframe" method="post" enctype="multipart/form-data" id="uploadF" action="/">
+        <div id="uploadU" class="form-group">
+            <label for="imageUpload" class="btn uploadBut">Upload Object</label>
+            <input id="imageUpload" style="display: none" type="file" name="uploadThis"/>
+            <button type="submit" class="btn" id="uploadS">Submit</button>
+            <button type="submit" class="btn" id="refresh">Refresh!</button>
+        </div>
+      </form>
+
       <h4>Delete Object </h4>
       <div class="textbox">
          <span id="delObjN" contenteditable>Name</span> 
       <div class="go" id="delObj">Go!</div>
+
       </div>
+            <button type="submit" class="btn" id="refresh">Refresh!</button>
 <!--
     <div id="containers">
     <label class='radio-label'>
@@ -99,6 +146,10 @@
     </div>
   </div>
 -->
+
     </div>
+
+
+      <iframe width="0" height="0" border="0" name="dummyframe" id="dummyframe"></iframe>
   </body>       
 </html>
