@@ -1,5 +1,5 @@
 $(function(){
-    let url = "http://192.168.2.107:8080/";
+    let url = "http://192.168.2.150:8080/";
     let account;
     let containerDom = $('#containers > span');
     let containerRes;
@@ -70,12 +70,12 @@ $(function(){
     $('#uploadS').on('click', function(e){
         uploadON = $('#uploadN').text();
         uploadOE = $('#uploadE').text();
+        //$('#uploadF').attr('action', "http://192.168.2.150:8080/v1/"+account+"/"+container+"/"+uploadON);
         $('#uploadF').attr('action', "/api/object/create?name="+account+"&container="+container+"&object="+uploadON+"&effect="+uploadOE);
     });    
 
     $('#refresh').on('click', function(){
         updateObject();
-        updateContainer();
     });
     let object;
 

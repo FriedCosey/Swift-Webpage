@@ -3,7 +3,7 @@ const express = require('express');
 const app = express();
 var fs = require('fs');
 const request = require('request');
-var url = "192.168.2.107"
+var url = "192.168.2.150"
 var multer  = require('multer');
 
 app.listen(3000);
@@ -93,6 +93,7 @@ function addContainer(req, res){
         headers: {
             'Content-Length': 0,
             "X-Container-Read": ".r:*",
+            "X-Container-Write": ".r:*" ,
             'X-Auth-Token' : JSON.stringify(res.locals.token),
         },
         },function(err, httpRes, body){
