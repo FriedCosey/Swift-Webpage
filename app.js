@@ -5,6 +5,8 @@ var fs = require('fs');
 const request = require('request');
 var url = "192.168.2.150"
 var multer  = require('multer');
+const path = require('path');
+var FormData = require('form-data');
 
 app.listen(3000);
 
@@ -13,14 +15,13 @@ app.get('/api/container', getToken, getContainer);
 app.get('/api/container/create', getToken, addContainer);
 app.get('/api/container/delete', getToken, delContainer);
 app.get('/api/object/delete', getToken, delObject);
-app.post('/api/object/create', getToken, addObject);
 app.get('/api/object', getToken, getObject);
 app.get('/api/object/download', getToken, downloadObject);
 
 
 var storage = multer.diskStorage({
     destination: function(req, file, cb){
-      cb(null, 'C:\\Users\\User\\Desktop')
+      cb(null, '/Users/apple/uploood')
     },
     filename: function(req, file, cb){
       console.log("file name:")
@@ -31,34 +32,9 @@ var storage = multer.diskStorage({
 })
 var upload = multer({ storage: storage });
 var fileBuffer;
-var readFile = function(req, res, next){
-    console.log(req.files[0].originalname);
-    fileBuffer = fs.readFileSync(path.join(__dirname, "../../../" + req.files[0].path));
-    fs.readFile(path.join(__dirname, "../../../" + req.files[0].path), "utf8", function(err, text){
-    //charsetMatch = detectCharacterEncoding(fileBuffer);
-    //console.log(charsetMatch);    
-    if(err){
-        console.log(err);
-        next();
-    }
-    else
-        next();
-    });
-};
     
 
-router.post('/students/score', upload.any(), readFile, function(req, res){
-    if(!req.files){
-        console.log("No files");
-        return;
-    }
-    
-    var charsetMatch = detectCharacterEncoding(fileBuffer);
-    console.log(charsetMatch);  
-    console.log(req.files);
-    res.redirect('/students/Head?e='+encodeURIComponent('Upload File'));
-  });
-
+app.post('/api/object/create', getToken, upload.any(), addObject);
 
 function downloadObject(req, res){
  
@@ -109,14 +85,35 @@ function delContainer(req, res){
 }
 
 function addObject(req, res){
-    console.log(req.files);
+    /*var formData = {
+    custom_file: {
+    value: fs.createReadStream('/Users/apple/uploood/'+req.files[0].originalname),
+    options: {
+      filename: 'topsecret.jpg',
+      contentType: 'image/jpeg'
+    }
+    //my_file: fs.createReadStream('/Users/apple/uploood/'+req.files[0].originalname),
+    }};*/
     if(req.query.effect === "preview");
     else if(req.query.effect === "flip");
     else if(req.query.effect === "grey");
     else if(req.query.effect === "rotate");
     else
         req.query.effect = '';
+    /* console.log("http://" + url + ":8080/v1/" + res.locals.account + "/" + req.query.container + "/" + req.query.object);
      request({
+        uri: "http://" + url + ":8080/v1/" + res.locals.account + "/" + req.query.container + "/" + req.query.object,
+        method: 'PUT',
+        formData: formData,
+        headers: {
+            'X-Auth-Token' : JSON.stringify(res.locals.token),
+            'effect' : req.query.effect,
+        },
+        },function(err, httpRes, body){
+        console.log(body);
+        res.send(body);    
+    });*/
+    fs.createReadStream('/Users/apple/uploood/'+req.files[0].originalname).pipe(request({
         uri: "http://" + url + ":8080/v1/" + res.locals.account + "/" + req.query.container + "/" + req.query.object,
         method: 'PUT',
         headers: {
@@ -125,8 +122,8 @@ function addObject(req, res){
         },
         },function(err, httpRes, body){
         console.log(body);
-        res.send(body);    
-    });
+        res.send(body);
+    }));
 }
 
 function addContainer(req, res){
