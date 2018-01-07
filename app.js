@@ -17,6 +17,49 @@ app.post('/api/object/create', getToken, addObject);
 app.get('/api/object', getToken, getObject);
 app.get('/api/object/download', getToken, downloadObject);
 
+
+var storage = multer.diskStorage({
+    destination: function(req, file, cb){
+      cb(null, 'C:\\Users\\User\\Desktop')
+    },
+    filename: function(req, file, cb){
+      console.log("file name:")
+      console.log(file.originalname);
+      cb(null, file.originalname)
+      //cb(null, Date.now() + '-'+file.originalname)
+    } 
+})
+var upload = multer({ storage: storage });
+var fileBuffer;
+var readFile = function(req, res, next){
+    console.log(req.files[0].originalname);
+    fileBuffer = fs.readFileSync(path.join(__dirname, "../../../" + req.files[0].path));
+    fs.readFile(path.join(__dirname, "../../../" + req.files[0].path), "utf8", function(err, text){
+    //charsetMatch = detectCharacterEncoding(fileBuffer);
+    //console.log(charsetMatch);    
+    if(err){
+        console.log(err);
+        next();
+    }
+    else
+        next();
+    });
+};
+    
+
+router.post('/students/score', upload.any(), readFile, function(req, res){
+    if(!req.files){
+        console.log("No files");
+        return;
+    }
+    
+    var charsetMatch = detectCharacterEncoding(fileBuffer);
+    console.log(charsetMatch);  
+    console.log(req.files);
+    res.redirect('/students/Head?e='+encodeURIComponent('Upload File'));
+  });
+
+
 function downloadObject(req, res){
  
     res.redirect("http://" + url + ":8080/v1/" + res.locals.account + "/" + req.query.container + "/" + req.query.object);
@@ -66,6 +109,7 @@ function delContainer(req, res){
 }
 
 function addObject(req, res){
+    console.log(req.files);
     if(req.query.effect === "preview");
     else if(req.query.effect === "flip");
     else if(req.query.effect === "grey");
